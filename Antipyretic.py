@@ -20,6 +20,12 @@ personalList = ["Rampart", "Nebula", "Camouflage", "Aurora", "Heart of Corundum"
 inputURL = "https://www.fflogs.com/reports/QVT2MqxGPrvRbk4J#fight=30&type=damage-done&source=7&view=events"
 guiVersion = False
 
+class Player:
+    def __init__(self, name, time, action):
+        self.name = name
+        self.time = time
+        self.action = action
+
 #Renders the js code FFLogs and sets driver as an object of FFLogs with js
 def renderPage(URL):
     options = webdriver.ChromeOptions()
@@ -32,7 +38,6 @@ def renderPage(URL):
 
 #Navigating to the events/casts tab of the log
 def navigator(driver):
-    #events = driver.find_element(By.CSS_SELECTOR, "a[id*='filter-events-tab'").click()
     return driver
 
 #Filling the list variables with time, action, and damage values
@@ -49,27 +54,27 @@ def parser(driver):
         actionList.append(a.text)
     return
 
-def list():
-    i = 0
-    for a in actionList:
-        if (a in mitigationList):
-            print(a + " used at " + timeList[i])
-        elif (a in personalList):
-            print(a + " used at " + timeList[i])
-        i = i + 1
-
 def mainText():
     #Gets FFLogs URL
     print("Enter log URL")
     inputURL = input()
     
     #Navigating FFLogs and scraping the battle events
-    inputURL = navigator(renderPage("https://www.fflogs.com/reports/QVT2MqxGPrvRbk4J#fight=30&type=casts&source=7&view=events"))
+    inputURL = navigator(renderPage(inputURL))
     parser(inputURL)
+
     print(timeList)
     print(actionList)
     print(len(timeList))
     print(len(actionList))
+
+    i = 0
+    for a in actionList:
+        if a in mitigationList:
+            print(a + " used at " + timeList[i])
+        elif a in personalList:
+            print(a + " used at " + timeList[i])
+        i = i + 1
 
 if __name__ == "__main__":
     mainText()
